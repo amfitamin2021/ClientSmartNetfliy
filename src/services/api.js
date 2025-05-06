@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { getServerUrl, getDemoMode } from '../store/serverStore'
+import { getServerUrl, getDemoMode } from '../config/serverConfig'
 import { getDemoData } from './demoData'
 
 // Функция для создания API-клиента с текущим адресом сервера
