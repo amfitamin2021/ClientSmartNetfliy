@@ -1,5 +1,30 @@
-// Временное решение для ошибки "Cannot access 'db' before initialization"
-window.db = {}; 
+// Более полная заглушка для объекта db со всеми возможными методами
+window.db = {
+  // Базовые методы для работы с базой данных
+  open: () => Promise.resolve(),
+  close: () => Promise.resolve(),
+  transaction: () => ({
+    objectStore: () => ({
+      get: () => Promise.resolve({}),
+      getAll: () => Promise.resolve([]),
+      put: () => Promise.resolve(),
+      delete: () => Promise.resolve(),
+      clear: () => Promise.resolve(),
+      index: () => ({
+        get: () => Promise.resolve({}),
+        getAll: () => Promise.resolve([])
+      })
+    }),
+    commit: () => Promise.resolve(),
+    abort: () => Promise.resolve()
+  }),
+  objectStoreNames: {
+    contains: () => true
+  },
+  createObjectStore: () => ({
+    createIndex: () => ({})
+  })
+};
 
 // Включаем демо-режим по умолчанию для Netlify
 if (window.location.hostname.includes('netlify.app')) {
