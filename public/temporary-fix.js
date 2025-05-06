@@ -32,6 +32,41 @@ if (window.location.hostname.includes('netlify.app')) {
   localStorage.setItem('smart_home_server_url', 'https://demo-api.example.com');
 }
 
+// Механизм аварийного переключения на запасную страницу
+window.addEventListener('DOMContentLoaded', function() {
+  // Установка таймера для проверки загрузки приложения
+  setTimeout(function() {
+    const appElement = document.getElementById('app');
+    
+    // Если элемент #app пуст (приложение не загрузилось)
+    if (appElement && appElement.children.length === 0) {
+      console.log("Приложение не загрузилось. Переключение на запасную страницу...");
+      
+      // Пробуем загрузить запасную страницу
+      fetch('/index.fallback.html')
+        .then(response => response.text())
+        .then(html => {
+          document.body.innerHTML = html;
+        })
+        .catch(error => {
+          console.error('Не удалось загрузить запасную страницу:', error);
+          
+          // Простой запасной вариант, если запасная страница не загрузилась
+          document.body.innerHTML = `
+            <div style="font-family: sans-serif; max-width: 500px; margin: 50px auto; padding: 20px; background: #f5f5f5; border-radius: 5px;">
+              <h1>Умный дом - Проблема загрузки</h1>
+              <p>Приложение не смогло загрузиться корректно. Попробуйте следующие действия:</p>
+              <ul>
+                <li>Включите демо-режим: <button onclick="localStorage.setItem('smart_home_demo_mode', 'true'); window.location.reload();">Включить демо-режим</button></li>
+                <li>Перезагрузите страницу: <button onclick="window.location.reload();">Перезагрузить</button></li>
+              </ul>
+            </div>
+          `;
+        });
+    }
+  }, 5000); // Ждем 5 секунд перед проверкой
+});
+
 // Добавляем визуальный отладчик на страницу
 window.addEventListener('DOMContentLoaded', function() {
   // Создаем элемент для отображения ошибок
