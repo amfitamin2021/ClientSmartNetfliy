@@ -30,4 +30,67 @@ window.db = {
 if (window.location.hostname.includes('netlify.app')) {
   localStorage.setItem('smart_home_demo_mode', 'true');
   localStorage.setItem('smart_home_server_url', 'https://demo-api.example.com');
-} 
+}
+
+// Добавляем визуальный отладчик на страницу
+window.addEventListener('DOMContentLoaded', function() {
+  // Создаем элемент для отображения ошибок
+  const debugContainer = document.createElement('div');
+  debugContainer.style.position = 'fixed';
+  debugContainer.style.top = '10px';
+  debugContainer.style.left = '10px';
+  debugContainer.style.right = '10px';
+  debugContainer.style.backgroundColor = 'rgba(0,0,0,0.8)';
+  debugContainer.style.color = 'white';
+  debugContainer.style.padding = '20px';
+  debugContainer.style.zIndex = '9999';
+  debugContainer.style.fontFamily = 'monospace';
+  debugContainer.style.fontSize = '14px';
+  debugContainer.style.maxHeight = '80%';
+  debugContainer.style.overflow = 'auto';
+  
+  // Заголовок
+  const heading = document.createElement('h2');
+  heading.textContent = 'Отладочная информация';
+  debugContainer.appendChild(heading);
+  
+  // Информация о среде
+  const envInfo = document.createElement('div');
+  envInfo.innerHTML = `
+    <p>URL: ${window.location.href}</p>
+    <p>Демо-режим: ${localStorage.getItem('smart_home_demo_mode')}</p>
+    <p>Адрес сервера: ${localStorage.getItem('smart_home_server_url')}</p>
+    <p>User Agent: ${navigator.userAgent}</p>
+  `;
+  debugContainer.appendChild(envInfo);
+  
+  // Контейнер для ошибок
+  const errorsContainer = document.createElement('div');
+  errorsContainer.innerHTML = '<h3>Ошибки:</h3>';
+  debugContainer.appendChild(errorsContainer);
+  
+  // Добавляем на страницу
+  document.body.appendChild(debugContainer);
+  
+  // Перехватываем все ошибки
+  window.addEventListener('error', function(event) {
+    const errorDiv = document.createElement('div');
+    errorDiv.style.color = 'red';
+    errorDiv.style.marginBottom = '10px';
+    errorDiv.innerHTML = `
+      <p><strong>Ошибка:</strong> ${event.message}</p>
+      <p><strong>Источник:</strong> ${event.filename}, строка ${event.lineno}, колонка ${event.colno}</p>
+    `;
+    errorsContainer.appendChild(errorDiv);
+    
+    return false; // Позволяем ошибке также отобразиться в консоли
+  });
+  
+  // Проверяем, загрузился ли Vue
+  setTimeout(() => {
+    const appElement = document.getElementById('app');
+    const appInfo = document.createElement('div');
+    appInfo.innerHTML = `<p>Состояние #app: ${appElement.children.length > 0 ? 'Есть содержимое' : 'Пусто'}</p>`;
+    envInfo.appendChild(appInfo);
+  }, 3000);
+}); 
