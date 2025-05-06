@@ -590,6 +590,3 @@ export default {
 
 // Отдельные экспорты для прямого импорта
 export { devicesApi, scenariosApi, notificationsApi, userApi, statsApi, locationsApi }
-
-// Экспортируем функцию обновления клиента для использования в serverStore
-export { updateApiClient }
