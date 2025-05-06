@@ -1,0 +1,27 @@
+# Конфигурация для деплоя на Netlify
+[build]
+  # Директория с исходным кодом Vue.js приложения
+  base = "/"
+  
+  # Команда для сборки приложения
+  command = "npm run build"
+  
+  # Директория, в которую будет собрано приложение
+  publish = "dist"
+
+# Настройки для SPA (Single Page Application)
+[[redirects]]
+  # Все маршруты перенаправляются на index.html
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  
+# Настройки заголовков для безопасности
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https:;" 
